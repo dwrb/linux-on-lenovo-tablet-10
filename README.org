@@ -13,7 +13,7 @@ Moving along, I tried an Ubuntu live ISO.  The 18.04 ISO booted but the graphics
 
 After using the Ubuntu USB stick with success, I decided to install it to an SD card so I would not need to erase Windows on the internal drive (just in case the hardware does not work as well as I hope and I decide to pass this device along).  Unfortunately, GRUB was not able to access the SD Card, so my system would not boot without the =/boot= partition being on the internal drive.  So I decided just to go for it -- I erased Windows (except the recovery partition) and replaced it with my install.
 
-* Current status.
+* Current status
 
 #+BEGIN_SRC shell :results verbatim
 uname -srvmpio
@@ -34,7 +34,6 @@ Issues:
 - Sometimes there is some graphics weirdness on the left side of the screen.
 - Tearing when scrolling e.g. in Firefox.  The screen seems to scan from left to right.
 - The pen input does not rotate with the screen -- it always assumes the tablet is in portrait mode, so it does not even align with the orientation one expects from where the keyboard is.  And it is quirky -- it does not show up in Ubuntu's Wacom tablet settings.
-- It seems that it is impossible to right click using the touchpad.  I thought this worked on the Live CD though.
 - Touch and pen stop working after first suspend, until the machine is rebooted.
 
 Not yet tested:
