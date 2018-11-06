@@ -1,0 +1,120 @@
+#+STARTUP: nofold
+* Rationale
+
+My goal is to have all the benefits of a tablet computer, but without relying on Apple or Google.  I have long awaited a Purism Librem 11, but it is still not in production.  So I finally purchased a Lenovo Tablet 10 (3rd gen) with the goal of running [GNU/]Linux on it.
+
+This is a machine for my hobbies, which include reading, consuming media while on the elliptical machine, experimenting with new software, and writing documents such as this one.  I have another more conventional laptop that I use for work.
+
+* Initial goal: NixOS; achieved goal: Ubuntu 18.10
+
+My initial goal was to get NixOS running on the Tablet 10, so that I could easily tweak things in a declarative manner and provide a literate document here that would allow anybody to easily reproduce my setup.  It would also allow me to easily experiment with different configurations without committing to them.  However, I copied the NixOS ISO to a USB stick, and it would not boot.  I tried building a few flavors of it, including with a newer kernel.  I tried disabling Secure Boot, as is needed to boot the NixOS ISO.  In each case it would simply show a flashing cursor in the upper left corner of the screen.  It would never even reach the GRUB menu.
+
+Moving along, I tried an Ubuntu live ISO.  The 18.04 ISO booted but the graphics were all messed up.  Ubuntu 18.10 has a newer kernel (4.18 rather than 4.14), and the graphics worked much better minus a few issues which I will get to.
+
+After using the Ubuntu USB stick with success, I decided to install it to an SD card so I would not need to erase Windows on the internal drive (just in case the hardware does not work as well as I hope and I decide to pass this device along).  Unfortunately, GRUB was not able to access the SD Card, so my system would not boot without the =/boot= partition being on the internal drive.  So I decided just to go for it -- I erased Windows (except the recovery partition) and replaced it with my install.
+
+* Current status.
+
+#+BEGIN_SRC shell :results verbatim
+uname -srvmpio
+#+END_SRC
+
+#+RESULTS:
+: Linux 4.18.0-10-generic #11-Ubuntu SMP Thu Oct 11 15:13:55 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
+
+With Ubuntu 18.10, things mostly work.  Particularly:
+
+- I was delighted to see the screen rotate automatically.
+- All function keys work, including the tablet volume buttons.
+- And I was happy to see the machine continue to work as the keyboard is removed and replaced.  (I've heard that the X1 tablet has issues with this on [GNU/]Linux.)
+
+Issues:
+
+- The system boots to a blank screen and I have to type in my encrypted drive's passphrase, without a visible prompt, before it will boot up.  Actually even after this I need to push the power button a few times before I typically see anything.
+- Sometimes there is some graphics weirdness on the left side of the screen.
+- Tearing when scrolling e.g. in Firefox.  The screen seems to scan from left to right.
+- The pen input does not rotate with the screen -- it always assumes the tablet is in portrait mode, so it does not even align with the orientation one expects from where the keyboard is.  And it is quirky -- it does not show up in Ubuntu's Wacom tablet settings.
+- It seems that it is impossible to right click using the touchpad.  I thought this worked on the Live CD though.
+- Touch and pen stop working after first suspend, until the machine is rebooted.
+
+Not yet tested:
+
+- Near-field communication
+
+* Moving forward
+
+** Would upgrading to the 4.19 kernel help?
+
+#+BEGIN_SRC shell :results verbatim
+uname -srvmpio
+#+END_SRC
+
+#+RESULTS:
+: Linux 4.19.0-041900-generic #201810221809 SMP Mon Oct 22 22:11:45 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
+
+Upgrading to 4.19 seems to have fixed nothing.  Notably, the touchscreen and pen still stop working after sleep.
+
+** Moving to NixOS
+
+Since I would like to run NixOS, I could also experiment with NIX LUSTRATE.  I'm still not sure why NixOS failed to boot and want to understand this better.
+
+** Touch scrolling in firefox
+
+Need to figure out how to get touch scrolling to work in Firefox.
+
+* Annoyances
+
+- Lock screen wants my login password, but most tablets would want a pattern or passcode etc.  So I am tempted to use a weak login password.  But NFC+yubikey could be an option.
+- Touch keyboard is quirky.
+
+* Overall takeaway
+
+My goal of having a [GNU/]Linux tablet is met, but not in a meaningful way.  Touch breaks after suspend, which is unacceptable for normal tablet use.  Even worse, the boot process is complicated by the need to type a passphrase and fiddle with the power button before seeing any prompt.  This could potentially be "fixed" by disabling disk encryption and enabling automatic login.  But even if these issues were fixed through future software updates, this device would be nowhere near as nice as an iPad or flagship Google tablet, in terms of both hardware (e.g. it is thicker) and software.  But it would mean accomplishing my original goal, so I am hoping that driver support improves.
+
+* Detailed system configuration info
+#+BEGIN_SRC shell :results verbatim drawer
+lspci
+#+END_SRC
+
+#+RESULTS:
+:RESULTS:
+00:00.0 Host bridge: Intel Corporation Device 31f0 (rev 03)
+00:00.1 Signal processing controller: Intel Corporation Device 318c (rev 03)
+00:00.3 System peripheral: Intel Corporation Device 3190 (rev 03)
+00:02.0 VGA compatible controller: Intel Corporation Device 3185 (rev 03)
+00:0e.0 Audio device: Intel Corporation Device 3198 (rev 03)
+00:0f.0 Communication controller: Intel Corporation Device 319a (rev 03)
+00:11.0 Unclassified device [0050]: Intel Corporation Device 31a2 (rev 03)
+00:13.0 PCI bridge: Intel Corporation Device 31d8 (rev f3)
+00:13.1 PCI bridge: Intel Corporation Device 31d9 (rev f3)
+00:15.0 USB controller: Intel Corporation Device 31a8 (rev 03)
+00:16.0 Signal processing controller: Intel Corporation Device 31ac (rev 03)
+00:16.1 Signal processing controller: Intel Corporation Device 31ae (rev 03)
+00:16.3 Signal processing controller: Intel Corporation Device 31b2 (rev 03)
+00:17.0 Signal processing controller: Intel Corporation Device 31b4 (rev 03)
+00:17.1 Signal processing controller: Intel Corporation Device 31b6 (rev 03)
+00:17.2 Signal processing controller: Intel Corporation Device 31b8 (rev 03)
+00:19.0 Signal processing controller: Intel Corporation Device 31c2 (rev 03)
+00:19.1 Signal processing controller: Intel Corporation Device 31c4 (rev 03)
+00:1c.0 SD Host controller: Intel Corporation Device 31cc (rev 03)
+00:1e.0 SD Host controller: Intel Corporation Device 31d0 (rev 03)
+00:1f.0 ISA bridge: Intel Corporation Device 31e8 (rev 03)
+00:1f.1 SMBus: Intel Corporation Device 31d4 (rev 03)
+01:00.0 SD Host controller: O2 Micro, Inc. SD/MMC Card Reader Controller (rev 01)
+02:00.0 Unassigned class [ff00]: Realtek Semiconductor Co., Ltd. RTL8822BE 802.11a/b/g/n/ac WiFi adapter
+:END:
+
+#+BEGIN_SRC shell :results verbatim drawer
+lsusb
+#+END_SRC
+
+#+RESULTS:
+:RESULTS:
+Bus 002 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+Bus 001 Device 006: ID 04ca:7075 Lite-On Technology Corp. 
+Bus 001 Device 004: ID 04ca:7074 Lite-On Technology Corp. 
+Bus 001 Device 035: ID 17ef:60c1 Lenovo 
+Bus 001 Device 034: ID 0424:2514 Standard Microsystems Corp. USB 2.0 Hub
+Bus 001 Device 002: ID 0bda:b023 Realtek Semiconductor Corp. 
+Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+:END:
