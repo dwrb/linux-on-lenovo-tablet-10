@@ -33,7 +33,7 @@ Issues:
 - The system boots to a blank screen and I have to type in my encrypted drive's passphrase, without a visible prompt, before it will boot up.  Actually even after this I need to push the power button a few times before I typically see anything.
 - Sometimes there is some graphics weirdness on the left side of the screen.
 - Tearing when scrolling e.g. in Firefox.  The screen seems to scan from left to right.
-- The pen input does not rotate with the screen -- it always assumes the tablet is in portrait mode, so it does not even align with the orientation one expects from where the keyboard is.  And it is quirky -- it does not show up in Ubuntu's Wacom tablet settings.
+- The pen input does not rotate with the screen -- it always assumes the tablet is in portrait mode, so it does not even align with the orientation one expects from where the keyboard is.  And it is quirky -- it does not show up in Ubuntu's Wacom tablet settings.  Note that auto rotation of pen does not work even though =iio-sensor-proxy= is installed.
 - Touch and pen stop working after first suspend, until the machine is rebooted.
 
 Not yet tested:
